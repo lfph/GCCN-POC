@@ -1,6 +1,6 @@
 repository:
-  name: UNDP-Trust-Registry-Pilot
-  description: UNDP Trust Registry Pilot
+  name: GCCN-POC
+  description: GCCN POC Base Repository
   homepage: https://www.lfph.io/
   default_branch: main
   has_downloads: true
