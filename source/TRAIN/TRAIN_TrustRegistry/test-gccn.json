@@ -1,0 +1,32 @@
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://essif-lab.pages.grnet.gr/interoperability/eidas-generic-use-case/contexts/ehic-v1.jsonld"
+  ],
+  "id": "https://ec.europa.eu/credentials/83627465",
+  "type": ["VerifiableCredential", "EuropeanHealthInsuranceCard"],
+  "issuer": "Netherlands Ministry of Public Health, Welfare and Sport",
+  "name": "European Health Insurance Card",
+  "description": "Example of a European Health Insurance Card",
+  "issuanceDate": "2021-01-01T12:19:52Z",
+  "expirationDate": "2029-12-03T12:19:52Z",
+  "institutionID": "09999 - GE KVG",
+  "cardNo": "80756099990000034111",
+  "claim": "registry.gccn.train.trust-scheme.de",
+  "personalID": "09999 111999",
+  "credentialSubject": {
+    "id": "did:sov:staging:BJX4adKceDv9D4qmztEN3F",
+    "type": ["EuropeanHealthInsuranceHolder", "Person"],
+    "familyName": "Muster",
+    "givenName": "Maria",
+    "birthDate": "1958-07-17"
+  },
+  "proof": {
+    "type": "Ed25519Signature2018",
+    "created": "2021-01-01T12:19:52Z",
+    "jws": "eyJhbGciOiJFZERTQSIsI...wRG2fNmAx60Vi4Ag",
+    "proofPurpose": "assertionMethod",
+    "verificationMethod": "did:example:28394728934792387#keys-7f83he7s8"
+  }
+}
+

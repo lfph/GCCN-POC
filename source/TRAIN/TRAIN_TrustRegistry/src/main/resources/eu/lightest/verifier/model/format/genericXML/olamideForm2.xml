@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Transaction format="Olamide's Transaction Format" specification="olamFormat2_0">
+    <Creator>
+        <FirstName type="string"/>
+        <LastName type="string"/>
+        <ContactNo type="int"/>
+        <Email type="string"/>
+        <Address>
+            <City type="string"/>
+            <State type="string"/>
+            <Zip type="int"/>
+        </Address>
+        <certificate type="cert"/>
+    </Creator>
+    <AcceptingParty>
+        <FirstName type="string"/>
+        <LastName type="string"/>
+        <ContactNo type="int"/>
+        <Email type="string"/>
+        <Address>
+            <City type="string"/>
+            <State type="string"/>
+            <Zip type="int"/>
+        </Address>
+        <certificate type="cert"/>
+    </AcceptingParty>
+</Transaction>

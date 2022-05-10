@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<form format="Pumpkin Seed Oil Delivery Network" specification="pumpkinSeedOil">
+
+    <purchaser>
+        <name type="string"/>
+        <street type="string"/>
+        <city type="string"/>
+        <country type="string"/>
+    </purchaser>
+
+    <item_id type="int"/>
+    <amount type="int"/>
+
+</form>
