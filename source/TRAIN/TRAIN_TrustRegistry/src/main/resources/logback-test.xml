@@ -1,0 +1,50 @@
+<configuration scan="true" scanPeriod="1 minute" debug="false">
+    <!--<variable-->
+    <!--name="logPattern"-->
+    <!--value="%-30(%d{MMM dd YYYY HH:mm:ss.SSS} [%thread]) %-5level %logger{5} [%file:%line] - %msg%n"/>-->
+    <variable
+            name="logPattern"
+            value="%-20([DD4J-%thread]) %-5level [%file:%line] - %msg%n"/>
+
+    <!--
+      The base name of the log file. For "example.log" this would
+      simply be "example". Or if it were "logs/example.log" then
+      "logs/example".
+
+      The default is set to write to Tomcat's logging directory in a file
+      named after the IntelliJ IDEA project.
+    -->
+    <variable
+            name="logname"
+            value="atv-logpack"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>${logPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!--<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+    <!--&lt;!&ndash;-->
+    <!--See http://logback.qos.ch/manual/appenders.html for details.-->
+    <!--&ndash;&gt;-->
+    <!--<file>${logname}.log</file>-->
+    <!--<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
+    <!--<fileNamePattern>\${logname}-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>-->
+    <!--<maxHistory>30</maxHistory>-->
+    <!--<maxFileSize>100MB</maxFileSize>-->
+    <!--</rollingPolicy>-->
+    <!--<encoder>-->
+    <!--<pattern>\${logPattern}</pattern>-->
+    <!--</encoder>-->
+    <!--</appender>-->
+
+    <!--    trace, debug, info, warn, error-->
+    <!-- <root level="warn"> -->
+    <root level="warn">
+        <!-- <appender-ref ref="STDOUT" /> -->
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
