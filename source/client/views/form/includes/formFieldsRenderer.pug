@@ -1,0 +1,152 @@
+-
+  //- adds saved data to the list of attributes for a component so that the data will be populated on the HTML field
+  function addSavedData(component, attributes){
+    if(formData[component.Key]){
+      attributes.value=formData[component.Key];
+    }
+  }
+
+  function addValidationAttribute(component, attributes){
+    if(component.Validation && component.Validation.Required)
+      attributes.required = 'required';
+  }
+
+  function getLabel(component){
+    if(component.Validation && component.Validation.Required)
+      return component.Label + ' <span class="text-danger">*</span>';
+    else
+      return component.Label;
+  }
+
+mixin RenderTooltip(component)
+  if component.Tooltip
+    span(class='tooltip-icon' tabindex='0' data-bs-toggle='tooltip' data-bs-placement='top' data-bs-html='true' title=`<strong>${component.Label}</strong><br>${component.Tooltip}`) ?
+
+mixin RenderText(field)
+  .row
+    .col-sm-8
+      .mb-4
+        label.form-label(for=field.Key) !{getLabel(field)}
+        +RenderTooltip(field)
+        - var attributes = {type: 'text', name: field.Key, id: field.Key };
+        - addSavedData(field, attributes);
+        - addValidationAttribute(field, attributes);
+        input.form-control.form-control-lg&attributes(attributes)
+
+mixin RenderURL(field)
+  .row
+    .col-sm-8
+      .mb-4
+        label.form-label(for=field.Key) !{getLabel(field)}
+        +RenderTooltip(field)
+        - var attributes = {type: 'url', name: field.Key, id: field.Key };
+        - addSavedData(field, attributes);
+        - addValidationAttribute(field, attributes);
+        input.form-control.form-control-lg&attributes(attributes)
+
+mixin RenderEmail(field)
+  .row
+    .col-sm-8
+      .mb-4
+        label.form-label(for=field.Key) !{getLabel(field)}
+        +RenderTooltip(field)
+        - var attributes = {type: 'email', name: field.Key, id: field.Key };
+        - addSavedData(field, attributes);
+        - addValidationAttribute(field, attributes);
+        input.form-control.form-control-lg&attributes(attributes)
+
+mixin RenderTel(field)
+  .row
+    .col-sm-8
+      .mb-4
+        label.form-label(for=field.Key) !{getLabel(field)}
+        +RenderTooltip(field)
+        - var attributes = {type: 'tel', name: field.Key, id: field.Key };
+        - addSavedData(field, attributes);
+        - addValidationAttribute(field, attributes);
+        input.form-control.form-control-lg&attributes(attributes)
+
+mixin RenderTextArea(field)
+  .mb-4
+    label.form-label(for=field.Key) !{getLabel(field)}
+    +RenderTooltip(field)
+    - var attributes = {name: field.Key, id: field.Key, rows: '5' };
+    - addValidationAttribute(field, attributes);
+    textarea.form-control.form-control-lg&attributes(attributes)=formData[field.Key]
+
+mixin RenderCheckBox(field)
+  .mb-4
+    label.form-label !{getLabel(field)}
+    +RenderTooltip(field)
+    each value in field.Values
+      .form-check
+        input.form-check-input(type='checkbox', value=value.Value, id=value.Key, name=field.Key+'[]', checked=(formData[field.Key] && formData[field.Key].includes(value.Value)))
+        label.form-check-label(for=value.Key)=value.Label
+
+mixin RenderSelect(field)
+  .row
+    .col-sm-8
+      .mb-4
+        label.form-label(for=field.Key) !{getLabel(field)}
+        +RenderTooltip(field)
+        - var attributes = {name:field.Key, id:field.Key}
+        - addValidationAttribute(field, attributes)
+        select.form-select.form-select-lg&attributes(attributes)
+          option(selected)
+          each option in field.Options
+            option(value=option, selected=option==formData[field.Key])=option
+  
+//- Edit Grid is a multi-value container. ie. users can enter values for 0 or more objects. 
+mixin RenderEditGrid(component)
+  .mb-4
+    label.form-label=component.Label
+    +RenderTooltip(component)
+    .edit-grid-container(id=component.Key)
+      fieldset.edit-grid-object.p-2(data-index=0, tabindex='0')
+        legend.ms-2.text-secondary=component.EntityLabel
+        each field in component.Components
+          -fieldCopy = JSON.parse(JSON.stringify(field));
+          -fieldCopy.Key = component.Key + '[0][' + field.Key + ']';
+          +RenderComponent(fieldCopy)
+        .text-right
+          button.btn.btn-lg.removeBtn.mb-3(type='button')='Remove '+component.EntityLabel
+      .text-center
+        button.btn.btn-lg.addBtn.mt-3(type='button')='Add '+component.EntityLabel
+
+//- Container is the wrapper for group of related fields.
+mixin RenderContainer(component)
+  .mb-4
+    label.form-label=component.Label
+    +RenderTooltip(component)
+    .container-object.p-2
+      each field in component.Components
+        -fieldCopy = JSON.parse(JSON.stringify(field));
+        -fieldCopy.Key = component.Key + '[' + field.Key + ']';
+        +RenderComponent(fieldCopy)
+
+mixin RenderComponent(component)
+  case component.Type
+    when 'Text'
+      case component.SubType
+        when 'Text'
+          +RenderText(component)
+        when 'URL'
+          +RenderURL(component)
+        when 'Email'
+          +RenderEmail(component)
+        when 'Tel'
+          +RenderTel(component)
+        default
+          div Component is not configured at this time.
+    when 'TextArea'
+      +RenderTextArea(component)
+    when 'CheckBox'
+      +RenderCheckBox(component)
+    when 'Select'
+      +RenderSelect(component)
+    when 'EditGrid'
+      +RenderEditGrid(component)
+    when 'Container'
+      +RenderContainer(component)
+    default 
+      div Component is not configured at this time.
