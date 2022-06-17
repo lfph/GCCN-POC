@@ -1,0 +1,79 @@
+extends ../layout  
+
+block content
+  //- import functions and mixins used to render form components
+  include includes/formFieldsRenderer.pug
+
+  .container
+    h1.mt-md-5.mb-md-5.mt-sm-4.mb-sm-4.mt-3.mb-3 Network Entry Submission
+    div.row
+      ul#progressbar
+        each section,i in formJSON.FormSections
+          - var step = i+1
+          - var classList = step==currentStep ? ['p-1', 'active'] : step<currentStep ? ['p-1', 'complete'] : ['p-1']
+          li(class=classList)
+            .text-center
+              span.step-count(tabindex='0' data-bs-toggle='tooltip' data-bs-placement='top' data-bs-html='true' title=`Step ${step}:<br><strong>${section.SectionName}</strong>`)=step
+              br 
+              span.step-description.d-none.d-sm-inline=section.SectionName
+      div.step-description__outside.text-center.d-block.d-sm-none=`Step ${currentStep}: ${formJSON.FormSections[currentStep-1].SectionName}`
+    
+    if currentStep==formJSON.FormSections.length
+      .text-center.p-5
+        h3 Thank you! The data has been submitted.
+    else
+      form.mt-3(action='/form/gccn-network-entry-submission/' + currentStep, method='POST')
+        each component in formJSON.FormSections[currentStep-1].Fields
+          //- RenderComponent imported from includes/formFieldsRenderer.pug
+          +RenderComponent(component)
+        .mb-4
+          if currentStep != 1
+            button.btn.btn-lg.me-3.navigateBtn.mb-2(type='submit', name='SubmitType', value='Previous') < Previous
+          if currentStep != formJSON.FormSections.length-1
+            button.btn.btn-lg.me-3.navigateBtn.mb-2(type='submit', name='SubmitType', value='Next') Next >
+          if currentStep == formJSON.FormSections.length-1
+            button.btn.btn-lg.me-3.submitBtn.mb-2(type='submit', name='SubmitType', value='Submit') Submit
+  
+block scripts
+  script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js')
+  script.
+    // handle 'Add element' and 'Remove element' buttons click for editgrid component
+    var editGridTemplates = {};
+    $('.edit-grid-container').each(function(i, container) {
+      $(container).find('.removeBtn').click(function(){
+        this.closest('.edit-grid-object').remove();
+      });
+      var template = $(container.firstElementChild).clone(true)[0];
+      editGridTemplates[container.id] = template;
+      $(container).find('.addBtn').click(function () {
+        var insertIndex = container.childElementCount==1 ? 0 : parseInt($(container).find('.edit-grid-object').last().attr('data-index'))+1;
+        var inserted = container.insertBefore($(template).clone(true)[0], container.lastElementChild);
+        inserted.dataset.index = insertIndex;
+        $(inserted).find('input,select,textarea').each(function(){
+          var id=this.id.split(/[\[\]]/);
+          id[1]=insertIndex;
+          newId=`${id[0]}[${id[1]}][${id[3]}]`;
+          this.id=newId;
+          this.name=newId;
+          this.previousElementSibling.setAttribute('for', newId);
+        });
+      });
+    });
+
+    $('form').validate({
+      errorClass: 'is-invalid',
+      focusInvalid: false,
+      invalidHandler: function(event, validator) {
+        if (validator.numberOfInvalids()) {
+          var element = validator.errorList[0].element;
+          element.focus();
+          element.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }
+      } 
+    })
+
+    var tooltipList = [];
+    $('.tooltip-icon').each((i, icon)=>tooltipList.push(new bootstrap.Tooltip(icon)));
+    if($(window).width()<576)
+      $('.step-count').each((i, icon)=>tooltipList.push(new bootstrap.Tooltip(icon)));

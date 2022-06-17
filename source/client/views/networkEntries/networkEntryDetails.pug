@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+  .container.mb-5(style='min-height:80vh;')
+    h1.mt-5.mb-5=json.TSPName
+    .card.network-entry-info
+      .card-header Participating Entity Information
+      .card-body
+        dl.row
+          each val, key in json
+            dt.col-sm-3=key+':'
+            dd.col-sm-9=val
